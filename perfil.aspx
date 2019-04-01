@@ -38,12 +38,27 @@ body {
                <br />
                <br />
                <br />
+               <center><img src="saldo.png" style="height: 61px; width: 469px"></center>
                <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="CONSULTAR SALDO" />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                <asp:Label ID="Label5" runat="server" Text="Label"></asp:Label>
                <br />
+               <br />
+               <br />
+                <center><img src="banck.png" style="height: 61px; width: 508px"></center>
 
-           </center>
+           
+               Numero De Cuenta a Transferir
+               <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+               <br />
+               Monto a Transferir:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <asp:TextBox ID="TextBox2" runat="server"></asp:TextBox>
+               <br />
+               <asp:Button ID="Button2" runat="server" OnClick="Button2_Click" Text="TRANSFERIR" />
+
+
+
+               </center>
 </form>
 
 </html>
