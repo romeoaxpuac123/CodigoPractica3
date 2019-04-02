@@ -28,6 +28,16 @@ body {
             <center>
 
 
+                <center><img src="eldeposito.png" style="height: 61px; width: 408px"><br />
+                    Numero De Cuenta
+                    <asp:TextBox ID="TextBox4" runat="server"></asp:TextBox>
+                    <br />
+                    Monto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <asp:TextBox ID="TextBox5" runat="server"></asp:TextBox>
+                    <br />
+                    <asp:Button ID="Button2" runat="server" OnClick="Button2_Click" Text="DEPOSITAR" />
+                    <br />
+
 
                 <center><img src="eldebito.png" style="height: 61px; width: 365px"><br />
                     <asp:Label ID="Label1" runat="server" Text="Numero de Cuenta"></asp:Label>

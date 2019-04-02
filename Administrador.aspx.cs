@@ -89,5 +89,68 @@ namespace Practica3
             comxxp.Parameters.Add("@codigo_Cuenta", SqlDbType.NVarChar).Value = cuenta;
             comxxp.ExecuteNonQuery();
         }
+
+        protected void Button2_Click(object sender, EventArgs e)
+        {
+            SqlConnection conxx = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
+            conxx.Open();
+            SqlCommand comxx = new SqlCommand(); // Create a object of SqlCommand class
+            comxx.Connection = conxx; //Pass the connection object to Command
+            comxx.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
+            comxx.CommandText = "ExistenciaDeCuenta"; //Stored Procedure Name
+            comxx.Parameters.Add("@numerodecuenta", SqlDbType.NVarChar).Value = TextBox1.Text;
+            comxx.ExecuteNonQuery();
+            int cuenta1 = 0;
+            decimal ElSaldo = 0;
+            SqlDataReader readerxx = comxx.ExecuteReader();
+            if (readerxx.HasRows)
+            {
+                while (readerxx.Read())
+                {
+                    cuenta1 = readerxx.GetInt32(0);
+                    ElSaldo = readerxx.GetDecimal(2);
+                    break;
+                }
+            }
+            //Existencia de Cuenta
+            if (cuenta1 > 0)
+            {
+
+                hacerdeposito(Convert.ToInt32(TextBox4.Text), depositar(ElSaldo, Convert.ToDecimal(TextBox5.Text)));
+                MessageBox.Show("Monto Agregado a Cuenta");
+                TextBox1.Text = "";
+                TextBox2.Text = "";
+                TextBox3.Text = "";
+                TextBox4.Text = "";
+                TextBox5.Text = "";
+            }
+            else
+            {
+                MessageBox.Show("Cuenta Inexistente");
+                TextBox1.Text = "";
+                TextBox2.Text = "";
+                TextBox3.Text = "";
+                TextBox4.Text = "";
+                TextBox5.Text = "";
+            }
+        }
+
+        public decimal depositar(decimal saldoActual, decimal MasSaldo)
+        {
+
+            return saldoActual + MasSaldo;
+        }
+        public void hacerdeposito(int cuenta,decimal saldo)
+        {
+            SqlConnection conxxp = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
+            conxxp.Open();
+            SqlCommand comxxp = new SqlCommand(); // Create a object of SqlCommand class
+            comxxp.Connection = conxxp; //Pass the connection object to Command
+            comxxp.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
+            comxxp.CommandText = "ModificarSaldo2"; //Stored Procedure Name
+            comxxp.Parameters.Add("@saldox", SqlDbType.NVarChar).Value = saldo;
+            comxxp.Parameters.Add("@codigo_Cuenta", SqlDbType.NVarChar).Value = cuenta;
+            comxxp.ExecuteNonQuery();
+        }
     }
 }
