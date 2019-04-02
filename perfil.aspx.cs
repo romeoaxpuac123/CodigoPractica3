@@ -12,8 +12,10 @@ namespace Practica3
 {
     public partial class perfil : System.Web.UI.Page
     {
+        int ElNumerodeCuenta = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
+            
             if (Session["Codigo_Usuario"].ToString().Length == 0)
             {
                 MessageBox.Show("Usuario Sin Permisos");
@@ -69,6 +71,9 @@ namespace Practica3
                 Label2.Text = "Usuario " + Usuario;
                 Label3.Text = "Nombre Usuario " + Nombre_Usuario;
                 Label4.Text = "Numero Cuenta " + cuenta;
+                ElNumerodeCuenta = cuenta;
+                TextBox3.Text = Convert.ToString(cuenta);
+                TextBox3.ReadOnly = true;
             }
            
         }
@@ -204,9 +209,8 @@ namespace Practica3
                     comxaAy.ExecuteNonQuery();
 
 
-                    ///agregando la transferencia a la base de datos
+                 
 
-                    
 
                     SqlConnection conxaAyx = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
                     conxaAyx.Open();
@@ -214,7 +218,7 @@ namespace Practica3
                     comxaAyx.Connection = conxaAyx; //Pass the connection object to Command
                     comxaAyx.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
                     comxaAyx.CommandText = "AgregarTrasnferencia"; //Stored Procedure Name
-                    comxaAyx.Parameters.Add("@numero_de_cuenta", SqlDbType.NVarChar).Value = cuenta1;
+                    comxaAyx.Parameters.Add("@numero_de_cuenta", SqlDbType.NVarChar).Value = ElNumerodeCuenta;
                     comxaAyx.Parameters.Add("@cuenta_a_transferir", SqlDbType.NVarChar).Value = Convert.ToInt32(TextBox1.Text);
                     comxaAyx.Parameters.Add("@monto", SqlDbType.NVarChar).Value = TextBox2.Text;
                     comxaAyx.Parameters.Add("@fecha", SqlDbType.NVarChar).Value = DateTime.Now;
@@ -240,6 +244,40 @@ namespace Practica3
 
 
 
+        }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+
+            if (Convert.ToDecimal(TextBox4.Text) > 0)
+            {
+                SqlConnection conxa = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
+                conxa.Open();
+                SqlCommand comxa = new SqlCommand(); // Create a object of SqlCommand class
+                comxa.Connection = conxa; //Pass the connection object to Command
+                comxa.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
+                comxa.CommandText = "SolicitudDeCretido"; //Stored Procedure Name
+                comxa.Parameters.Add("@cuenta", SqlDbType.NVarChar).Value = Convert.ToInt32(TextBox3.Text);
+                comxa.Parameters.Add("@descripcion", SqlDbType.NVarChar).Value = TextBox5.Text;
+                comxa.Parameters.Add("@monto", SqlDbType.NVarChar).Value = Convert.ToDecimal(TextBox4.Text);
+
+                comxa.ExecuteNonQuery();
+                MessageBox.Show("Credito Solicitado");
+                TextBox1.Text = "";
+                TextBox2.Text = "";
+                //TextBox3.Text = "";
+                TextBox4.Text = "";
+                TextBox5.Text = "";
+            }
+            else
+            {
+                MessageBox.Show("SOLICITUD DENEGADA");
+                TextBox1.Text = "";
+                TextBox2.Text = "";
+                //TextBox3.Text = "";
+                TextBox4.Text = "";
+                TextBox5.Text = "";
+            }
         }
     }
 }

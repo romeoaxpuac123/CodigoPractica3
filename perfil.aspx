@@ -58,6 +58,21 @@ body {
 
 
 
+               <center><img src="solicitud.png" style="height: 61px; width: 469px"><br />
+                   <asp:Label ID="Label6" runat="server">Numero de Cuenta</asp:Label>
+                   <asp:TextBox ID="TextBox3" runat="server" ></asp:TextBox>
+                   <br />
+                   <asp:Label ID="Label7" runat="server" Text="Monto"></asp:Label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                   <asp:TextBox ID="TextBox4" runat="server"></asp:TextBox>
+                   <br />
+                   <asp:Label ID="Label8" runat="server" Text="Descripcion"></asp:Label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                   <asp:TextBox ID="TextBox5" runat="server"></asp:TextBox>
+                   <br />
+                   <asp:Button ID="Button3" runat="server" Text="Solicitar Credito" OnClick="Button3_Click" />
+               </center>
+
                </center>
 </form>
 
