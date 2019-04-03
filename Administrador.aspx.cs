@@ -152,5 +152,108 @@ namespace Practica3
             comxxp.Parameters.Add("@codigo_Cuenta", SqlDbType.NVarChar).Value = cuenta;
             comxxp.ExecuteNonQuery();
         }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            SqlConnection conxx = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
+            conxx.Open();
+            SqlCommand comxx = new SqlCommand(); // Create a object of SqlCommand class
+            comxx.Connection = conxx; //Pass the connection object to Command
+            comxx.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
+            comxx.CommandText = "VerificarCredito"; //Stored Procedure Name
+            comxx.Parameters.Add("@codigo", SqlDbType.NVarChar).Value = Convert.ToInt32(TextBox6.Text);
+            comxx.ExecuteNonQuery();
+            int cuenta1 = 0;
+            int lacuenta= 0;
+            decimal elmonto = 0;
+            SqlDataReader readerxx = comxx.ExecuteReader();
+            if (readerxx.HasRows)
+            {
+                while (readerxx.Read())
+                {
+                    cuenta1 = readerxx.GetInt32(0);
+                    lacuenta = readerxx.GetInt32(1);
+                    elmonto = readerxx.GetDecimal(3);
+                    break;
+                }
+            }
+
+            ///Si la cuenta Existe
+            if (cuenta1>0)
+            {
+                //modificando el estado del credito
+                
+
+                ///añadiendo dinero a la cuenta del usuario
+                ///
+                SqlConnection conxxh = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
+                conxxh.Open();
+                SqlCommand comxxh = new SqlCommand(); // Create a object of SqlCommand class
+                comxxh.Connection = conxxh; //Pass the connection object to Command
+                comxxh.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
+                comxxh.CommandText = "ExistenciaDeCuenta"; //Stored Procedure Name
+                comxxh.Parameters.Add("@numerodecuenta", SqlDbType.NVarChar).Value = lacuenta;
+                comxxh.ExecuteNonQuery();
+                decimal ElSaldo = 0;
+                SqlDataReader readerxxh = comxxh.ExecuteReader();
+                if (readerxxh.HasRows)
+                {
+                    while (readerxxh.Read())
+                    {
+                        ElSaldo = readerxxh.GetDecimal(2);
+                        break;
+                    }
+                }
+                
+
+
+                SqlConnection conxxq = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
+                conxxq.Open();
+                SqlCommand comxxq = new SqlCommand(); // Create a object of SqlCommand class
+                comxxq.Connection = conxxq; //Pass the connection object to Command
+                comxxq.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
+                comxxq.CommandText = "AprobarCredito"; //Stored Procedure Name
+                comxxq.Parameters.Add("@codigo", SqlDbType.NVarChar).Value = Convert.ToInt32(TextBox6.Text);
+                comxxq.ExecuteNonQuery();
+
+                ///Verificando si el credito no fue aprobado con ateriorirdad
+                ///
+                SqlConnection conxxhp = new SqlConnection("Data Source=.;Initial Catalog = Practica3_AYD1;Trusted_Connection=true;");
+                conxxhp.Open();
+                SqlCommand comxxhp = new SqlCommand(); // Create a object of SqlCommand class
+                comxxhp.Connection = conxxhp; //Pass the connection object to Command
+                comxxhp.CommandType = CommandType.StoredProcedure; // We will use stored procedure.
+                comxxhp.CommandText = "ESTADO"; //Stored Procedure Name
+                comxxhp.Parameters.Add("@codigo", SqlDbType.NVarChar).Value = Convert.ToInt32(TextBox6.Text);
+                comxxhp.ExecuteNonQuery();
+                string Elestado = "";
+                SqlDataReader readerxxhp = comxxhp.ExecuteReader();
+                if (readerxxhp.HasRows)
+                {
+                    while (readerxxhp.Read())
+                    {
+                        Elestado = readerxxhp.GetString(0);
+                        break;
+                    }
+                }
+
+                if (Elestado == "Aprobado") {
+                    MessageBox.Show("Credito  YA aprobado, no se puede aprobar nuevamente");
+                }
+                else
+                {
+                    MessageBox.Show("Credito  aprobado");
+                    hacerdeposito(lacuenta, ElSaldo + elmonto);
+                }
+                
+                TextBox6.Text = "";
+                GridView1.DataBind();
+            }
+            else
+            {
+                MessageBox.Show("Error Credito No aprobado");
+                TextBox6.Text = "";
+            }
+        }
     }
 }
