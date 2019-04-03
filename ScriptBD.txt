@@ -1,0 +1,166 @@
+CREATE DATABASE Practica3_AYD1;
+
+CREATE TABLE usuario (
+    codigo_usuario      int IDENTITY(1022,1) NOT NULL PRIMARY KEY,
+    nombre_usuario      VARCHAR (100) NOT NULL,
+    usuario             VARCHAR(100) NOT NULL,
+    correoelectronico   VARCHAR(100) NOT NULL,
+    password            VARCHAR(8) NOT NULL
+);
+
+CREATE TABLE cuenta_bancaria (
+    numero_de_cuenta   INTEGER IDENTITY(10221022,1) NOT NULL PRIMARY KEY,
+    codigo_usuario     int NOT NULL,
+    saldo              DECIMAL NOT NULL,
+    FOREIGN KEY (codigo_usuario) REFERENCES usuario(codigo_usuario )
+);
+
+CREATE TABLE transferencia (
+    codigo_transferencia   int IDENTITY(898,1) NOT NULL PRIMARY KEY,
+    numero_de_cuenta       INTEGER NOT NULL,
+    cuenta_a_transferir    INTEGER NOT NULL,
+    monto                  DECIMAL NOT NULL,
+    fecha                  DATE NOT NULL,
+    FOREIGN KEY (numero_de_cuenta) REFERENCES cuenta_bancaria(numero_de_cuenta),
+    FOREIGN KEY (cuenta_a_transferir) REFERENCES cuenta_bancaria(numero_de_cuenta)
+);
+
+CREATE TABLE credito (
+    codigo_credito     int IDENTITY(76767,1) NOT NULL PRIMARY KEY,
+    numero_de_cuenta   INTEGER NOT NULL,
+    descripcion        VARCHAR(300) NOT NULL,
+    monto              DECIMAL NOT NULL,
+    estado             VARCHAR(50) NOT NULL,
+    FOREIGN KEY (numero_de_cuenta) REFERENCES cuenta_bancaria(numero_de_cuenta)
+);
+
+CREATE TABLE debito (
+    codigo_debito      INTEGER IDENTITY(34962,1) NOT NULL,
+    numero_de_cuenta   INTEGER NOT NULL,
+    descripcion        VARCHAR(300) NOT NULL,
+    monto              DECIMAL NOT NULL,
+    FOREIGN KEY (numero_de_cuenta) REFERENCES cuenta_bancaria(numero_de_cuenta)
+);
+
+GO
+CREATE PROC spInsertUser(
+	@codigo_usuario      VARCHAR(50),
+    @nombre_usuario      VARCHAR (100),
+    @usuario             VARCHAR(100),
+    @correoelectronico   VARCHAR(100),
+    @passwordU            VARCHAR(8)
+)
+as
+Insert into usuario(codigo_usuario ,nombre_usuario,usuario,correoelectronico,passwordU) values
+(@codigo_usuario ,@nombre_usuario,@usuario,@correoelectronico,@passwordU)
+
+CREATE PROC VerificarUsuario(
+    @usuarioR      VARCHAR (100)
+)
+as
+Select * from usuario where usuario = @usuarioR;
+
+
+
+CREATE PROC VerificarCodigoUs(
+    @usuarioR      VARCHAR (100)
+)
+as
+Select codigo_usuario from usuario where usuario = @usuarioR;
+
+CREATE PROC CrearCuenta(
+@codigoUsuario int
+)as
+insert into cuenta_bancaria (codigo_usuario,saldo) values(@codigoUsuario,0);
+
+
+create proc Login(
+	@codigo_usuario      int,
+    @usuario             VARCHAR(100),
+    @password            VARCHAR(8)
+)
+as
+select codigo_usuario,usuario,password from usuario
+where usuario = @usuario AND codigo_usuario = @codigo_usuario AND password = @password
+;
+
+CREATE PROC VerUsuario(
+@codigo_usuario int
+)
+as
+Select nombre_usuario,usuario from usuario where codigo_usuario = @codigo_usuario;
+
+CREATE PROC VerCuenta(
+@codigo_usuario int
+)
+as
+Select numero_de_cuenta from cuenta_bancaria where codigo_usuario = @codigo_usuario;
+
+
+CREATE PROC VerSaldo(
+@codigo_usuario int
+)
+as
+Select saldo from cuenta_bancaria where codigo_usuario = @codigo_usuario;
+
+create procedure ModificarSaldo(
+@saldox DECIMAL,
+@codigo_usuario int
+)
+as
+UPDATE cuenta_bancaria SET saldo = @saldox Where codigo_usuario = @codigo_usuario;
+
+create procedure ModificarSaldo2(
+@saldox DECIMAL,
+@codigo_Cuenta int
+)
+as
+UPDATE cuenta_bancaria SET saldo = @saldox Where numero_de_cuenta = @codigo_Cuenta;
+
+
+create procedure ExistenciaDeCuenta(
+@numerodecuenta int
+)
+as
+select * from cuenta_bancaria where numero_de_cuenta = @numerodecuenta;
+
+create procedure AgregarTrasnferencia(
+    @numero_de_cuenta       INTEGER,
+    @cuenta_a_transferir    INTEGER,
+    @monto                  DECIMAL,
+    @fecha                  DATE
+)
+as
+insert into transferencia(numero_de_cuenta,cuenta_a_transferir,monto,fecha) values (@numero_de_cuenta,@cuenta_a_transferir,@monto,@fecha) 
+
+CREATE PROCEDURE HacerDebito(
+@numero_de_Cuenta int,
+@descripcion varchar(300),
+@monto decimal
+)AS
+insert into debito (numero_de_cuenta,descripcion,monto) Values (@numero_de_Cuenta,@descripcion,@monto);
+
+
+CREATE PROCEDURE SolicitudDeCretido(
+@cuenta int,
+@descripcion varchar(300),
+@monto decimal
+)as
+INSERT INTO credito (numero_de_cuenta,descripcion,monto,estado) VALUES (@cuenta,@descripcion,@monto,'No Aprobado');
+
+create procedure VerificarCredito(
+@codigo int
+)as
+Select * from credito where codigo_credito = @codigo;
+
+
+create procedure AprobarCredito(
+@codigo int
+)as
+update credito set estado = 'Aprobado' where codigo_credito = @codigo
+
+CREATE PROCEDURE ESTADO(
+@codigo int
+)as
+select estado from credito where codigo_credito = @codigo;
+
