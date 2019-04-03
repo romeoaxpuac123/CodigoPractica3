@@ -255,5 +255,11 @@ namespace Practica3
                 TextBox6.Text = "";
             }
         }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Login.aspx", false);
+            Response.Cookies.Clear();
+        }
     }
 }

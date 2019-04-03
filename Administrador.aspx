@@ -22,7 +22,10 @@ body {
 }
 </style>
         <form id="form1" runat="server">
-        <center><img src="ad.png"></center>
+        <center><img src="ad.png"><br />
+            <br />
+            <asp:Button ID="Button4" runat="server" OnClick="Button4_Click" Text="Cerrar Sesion" />
+            </center>
    
 
             <center>
